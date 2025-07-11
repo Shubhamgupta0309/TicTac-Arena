@@ -5,50 +5,46 @@ import com.shubham.tictacarena.views.GameBoardView;
 import java.util.Queue;
 
 public class GameLogic {
-
     public static String checkWinner(
             GameBoardView gameBoard,
             Queue<PlayerMove> playerXMoves,
             Queue<PlayerMove> playerOMoves,
             int[][] winningCombinations
     ) {
-        // Check if X has won
-        if (checkLines(playerXMoves, winningCombinations)) {
-            return "X";
+        // Convert to arrays for easier checking
+        PlayerMove[] xMoves = playerXMoves.toArray(new PlayerMove[0]);
+        PlayerMove[] oMoves = playerOMoves.toArray(new PlayerMove[0]);
+
+        // Must have exactly 3 pieces to win
+        if (xMoves.length == 3) {
+            for (int[] combo : winningCombinations) {
+                if (matchesCombo(xMoves, combo)) {
+                    return "X";
+                }
+            }
         }
 
-        // Check if O has won
-        if (checkLines(playerOMoves, winningCombinations)) {
-            return "O";
+        if (oMoves.length == 3) {
+            for (int[] combo : winningCombinations) {
+                if (matchesCombo(oMoves, combo)) {
+                    return "O";
+                }
+            }
         }
 
         return null;
     }
 
-    private static boolean checkLines(Queue<PlayerMove> moves, int[][] winningCombinations) {
-        if (moves.size() < 3) return false;
+    private static boolean matchesCombo(PlayerMove[] moves, int[] combo) {
+        // combo format: [row1,col1, row2,col2, row3,col3]
+        boolean pos1 = false, pos2 = false, pos3 = false;
 
-        for (int[] combination : winningCombinations) {
-            boolean wins = true;
-            for (int i = 0; i < 3; i++) {
-                int row = combination[i * 2];
-                int col = combination[i * 2 + 1];
-                if (!containsMove(moves, row, col)) {
-                    wins = false;
-                    break;
-                }
-            }
-            if (wins) return true;
-        }
-        return false;
-    }
-
-    private static boolean containsMove(Queue<PlayerMove> moves, int row, int col) {
         for (PlayerMove move : moves) {
-            if (move.getRow() == row && move.getCol() == col) {
-                return true;
-            }
+            if (move.getRow() == combo[0] && move.getCol() == combo[1]) pos1 = true;
+            if (move.getRow() == combo[2] && move.getCol() == combo[3]) pos2 = true;
+            if (move.getRow() == combo[4] && move.getCol() == combo[5]) pos3 = true;
         }
-        return false;
+
+        return pos1 && pos2 && pos3;
     }
 }
