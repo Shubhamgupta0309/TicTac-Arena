@@ -1,0 +1,38 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@color/black">
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/ic_launcher_background" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TicTac Arena"
+        android:textColor="@color/white"
+        android:textSize="30sp" />
+
+    <Button
+        android:id="@+id/playWithFriend"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:text="Play with Friend" />
+
+    <Button
+        android:id="@+id/playWithAI"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:text="Play vs AI" />
+
+    <Button
+        android:id="@+id/howToPlay"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:text="How to Play" />
+</LinearLayout>
