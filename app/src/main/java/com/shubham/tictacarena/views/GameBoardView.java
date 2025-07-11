@@ -8,7 +8,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import androidx.annotation.Nullable;
 import com.shubham.tictacarena.R;
-import com.shubham.tictacarena.models.Pattern;
 
 public class GameBoardView extends View {
 
@@ -18,7 +17,7 @@ public class GameBoardView extends View {
     private Paint oPaint;
     private OnCellClickListener listener;
     private int cellSize;
-    private int boardPadding = 20;
+    private int boardPadding = 16;
 
     public GameBoardView(Context context) {
         super(context);
@@ -79,7 +78,7 @@ public class GameBoardView extends View {
         // Draw X's and O's
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
-                if (board[row][col] != null && !board[row][col].isEmpty()) {
+                if (board[row][col] != null) {
                     float centerX = boardPadding + col * cellSize + cellSize / 2f;
                     float centerY = boardPadding + row * cellSize + cellSize / 2f;
                     float offset = cellSize / 3f;
@@ -130,22 +129,7 @@ public class GameBoardView extends View {
     }
 
     public boolean isCellEmpty(int row, int col) {
-        return board[row][col] == null || board[row][col].isEmpty();
-    }
-
-    public String[][] getBoardState() {
-        return board;
-    }
-
-    public boolean isBoardFull() {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (board[i][j] == null || board[i][j].isEmpty()) {
-                    return false;
-                }
-            }
-        }
-        return true;
+        return board[row][col] == null;
     }
 
     public void resetBoard() {

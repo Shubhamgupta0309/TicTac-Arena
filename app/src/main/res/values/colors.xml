@@ -7,6 +7,7 @@
     <color name="player_o">#1E88E5</color>  <!-- Blue -->
     <color name="background">#F5F5F5</color>
     <color name="card_background">#FFFFFF</color>
+    <color name="white">#FFFFFF</color>
     <color name="text_primary">#212121</color>
     <color name="text_secondary">#757575</color>
     <color name="divider">#BDBDBD</color>

@@ -2,10 +2,8 @@ package com.shubham.tictacarena.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
-
 import androidx.appcompat.app.AppCompatActivity;
-
+import com.google.android.material.button.MaterialButton;
 import com.shubham.tictacarena.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -15,24 +13,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button playWithFriend = findViewById(R.id.playWithFriend);
-        Button playWithAI = findViewById(R.id.playWithAI);
-        Button howToPlay = findViewById(R.id.howToPlay);
+        MaterialButton playWithFriend = findViewById(R.id.playWithFriend);
+        MaterialButton playWithAI = findViewById(R.id.playWithAI);
+        MaterialButton howToPlay = findViewById(R.id.howToPlay);
 
-        playWithFriend.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, PatternsActivity.class);
-            intent.putExtra("isAI", false);
-            startActivity(intent);
-        });
+        playWithFriend.setOnClickListener(v -> startGame(false));
+        playWithAI.setOnClickListener(v -> startGame(true));
+        howToPlay.setOnClickListener(v ->
+                startActivity(new Intent(this, HowToPlayActivity.class)));
+    }
 
-        playWithAI.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, PatternsActivity.class);
-            intent.putExtra("isAI", true);
-            startActivity(intent);
-        });
-
-        howToPlay.setOnClickListener(v -> {
-            startActivity(new Intent(MainActivity.this, HowToPlayActivity.class));
-        });
+    private void startGame(boolean isAI) {
+        Intent intent = new Intent(this, GameActivity.class);
+        intent.putExtra("isAI", isAI);
+        startActivity(intent);
     }
 }
