@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/background"
-    android:padding="16dp">
+    android:padding="16dp"
+    tools:context=".activities.GameActivity">
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/CardStyle"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
         android:layout_marginBottom="16dp">
 
         <LinearLayout
@@ -23,15 +26,20 @@
                 android:id="@+id/patternName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/TitleText" />
+                android:textSize="20sp"
+                android:textColor="@color/primary"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_marginBottom="8dp"/>
 
             <TextView
                 android:id="@+id/patternRule"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_secondary"
                 android:textSize="14sp"
-                android:layout_marginBottom="16dp" />
+                android:textColor="@color/text_secondary"
+                android:gravity="center"
+                android:layout_marginBottom="16dp"/>
 
             <TextView
                 android:id="@+id/playerTurnText"
@@ -39,9 +47,8 @@
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="@color/primary"
                 android:gravity="center"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginBottom="16dp"/>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
@@ -49,12 +56,45 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        style="@style/CardStyle">
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        android:layout_marginBottom="16dp">
 
-        <com.shubham.tictacarena.views.GameBoardView
-            android:id="@+id/gameBoard"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="16dp" />
+            android:padding="16dp">
+
+            <com.shubham.tictacarena.views.GameBoardView
+                android:id="@+id/gameBoard"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"/>
+        </FrameLayout>
     </com.google.android.material.card.MaterialCardView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRestart"
+            style="@style/ButtonStyle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:text="Restart Game"
+            app:backgroundTint="@color/button_primary"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnMenu"
+            style="@style/ButtonStyle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:text="Main Menu"
+            app:backgroundTint="@color/button_secondary"/>
+    </LinearLayout>
 </LinearLayout>

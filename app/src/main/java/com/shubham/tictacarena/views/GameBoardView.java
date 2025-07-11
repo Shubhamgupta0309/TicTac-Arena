@@ -2,41 +2,121 @@ package com.shubham.tictacarena.views;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import androidx.annotation.Nullable;
+import com.shubham.tictacarena.R;
 import com.shubham.tictacarena.models.Pattern;
 
 public class GameBoardView extends View {
 
     private String[][] board = new String[3][3];
-    private Paint paint;
+    private Paint gridPaint;
+    private Paint xPaint;
+    private Paint oPaint;
     private OnCellClickListener listener;
-    private Pattern currentPattern;
+    private int cellSize;
+    private int boardPadding = 20;
 
-    public GameBoardView(Context context, AttributeSet attrs) {
+    public GameBoardView(Context context) {
+        super(context);
+        init();
+    }
+
+    public GameBoardView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        paint = new Paint();
-        paint.setColor(Color.BLACK);
-        paint.setStrokeWidth(5);
-        paint.setTextSize(100);
-        paint.setTextAlign(Paint.Align.CENTER);
+        init();
     }
 
-    public void setPattern(Pattern pattern) {
-        this.currentPattern = pattern;
-        resetBoard();
+    private void init() {
+        // Grid paint
+        gridPaint = new Paint();
+        gridPaint.setColor(getResources().getColor(R.color.grid_line));
+        gridPaint.setStrokeWidth(6f);
+        gridPaint.setStyle(Paint.Style.STROKE);
+        gridPaint.setAntiAlias(true);
+
+        // X player paint
+        xPaint = new Paint();
+        xPaint.setColor(getResources().getColor(R.color.player_x));
+        xPaint.setStrokeWidth(12f);
+        xPaint.setStyle(Paint.Style.STROKE);
+        xPaint.setAntiAlias(true);
+
+        // O player paint
+        oPaint = new Paint();
+        oPaint.setColor(getResources().getColor(R.color.player_o));
+        oPaint.setStrokeWidth(12f);
+        oPaint.setStyle(Paint.Style.STROKE);
+        oPaint.setAntiAlias(true);
     }
 
-    public void resetBoard() {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                board[i][j] = "";
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int size = Math.min(getMeasuredWidth(), getMeasuredHeight());
+        setMeasuredDimension(size, size);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+
+        cellSize = (getWidth() - 2 * boardPadding) / 3;
+
+        // Draw grid
+        for (int i = 1; i < 3; i++) {
+            // Vertical lines
+            float x = boardPadding + i * cellSize;
+            canvas.drawLine(x, boardPadding, x, getHeight() - boardPadding, gridPaint);
+            // Horizontal lines
+            float y = boardPadding + i * cellSize;
+            canvas.drawLine(boardPadding, y, getWidth() - boardPadding, y, gridPaint);
+        }
+
+        // Draw X's and O's
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
+                if (board[row][col] != null && !board[row][col].isEmpty()) {
+                    float centerX = boardPadding + col * cellSize + cellSize / 2f;
+                    float centerY = boardPadding + row * cellSize + cellSize / 2f;
+                    float offset = cellSize / 3f;
+
+                    if (board[row][col].equals("X")) {
+                        // Draw X
+                        canvas.drawLine(
+                                centerX - offset, centerY - offset,
+                                centerX + offset, centerY + offset,
+                                xPaint
+                        );
+                        canvas.drawLine(
+                                centerX + offset, centerY - offset,
+                                centerX - offset, centerY + offset,
+                                xPaint
+                        );
+                    } else {
+                        // Draw O
+                        canvas.drawCircle(centerX, centerY, offset, oPaint);
+                    }
+                }
             }
         }
-        invalidate();
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN && listener != null) {
+            int row = (int) ((event.getY() - boardPadding) / cellSize);
+            int col = (int) ((event.getX() - boardPadding) / cellSize);
+
+            if (row >= 0 && row < 3 && col >= 0 && col < 3) {
+                listener.onCellClick(row, col);
+                return true;
+            }
+        }
+        return super.onTouchEvent(event);
     }
 
     public void setCell(int row, int col, String value) {
@@ -45,12 +125,12 @@ public class GameBoardView extends View {
     }
 
     public void clearCell(int row, int col) {
-        board[row][col] = "";
+        board[row][col] = null;
         invalidate();
     }
 
     public boolean isCellEmpty(int row, int col) {
-        return board[row][col].isEmpty();
+        return board[row][col] == null || board[row][col].isEmpty();
     }
 
     public String[][] getBoardState() {
@@ -60,56 +140,21 @@ public class GameBoardView extends View {
     public boolean isBoardFull() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                if (board[i][j].isEmpty()) return false;
+                if (board[i][j] == null || board[i][j].isEmpty()) {
+                    return false;
+                }
             }
         }
         return true;
     }
 
-    public boolean isGameOver() {
-        return false; // Implement based on game state
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-
-        // Draw grid
-        float cellSize = getWidth() / 3f;
-
-        // Vertical lines
-        canvas.drawLine(cellSize, 0, cellSize, getHeight(), paint);
-        canvas.drawLine(cellSize * 2, 0, cellSize * 2, getHeight(), paint);
-
-        // Horizontal lines
-        canvas.drawLine(0, cellSize, getWidth(), cellSize, paint);
-        canvas.drawLine(0, cellSize * 2, getWidth(), cellSize * 2, paint);
-
-        // Draw X's and O's
+    public void resetBoard() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                if (!board[i][j].isEmpty()) {
-                    float x = j * cellSize + cellSize / 2;
-                    float y = i * cellSize + cellSize / 2 + paint.getTextSize() / 3;
-                    paint.setColor(board[i][j].equals("X") ? Color.RED : Color.BLUE);
-                    canvas.drawText(board[i][j], x, y, paint);
-                }
+                board[i][j] = null;
             }
         }
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN && listener != null) {
-            float cellSize = getWidth() / 3f;
-            int row = (int) (event.getY() / cellSize);
-            int col = (int) (event.getX() / cellSize);
-            if (row >= 0 && row < 3 && col >= 0 && col < 3) {
-                listener.onCellClick(row, col);
-            }
-            return true;
-        }
-        return super.onTouchEvent(event);
+        invalidate();
     }
 
     public void setOnCellClickListener(OnCellClickListener listener) {
