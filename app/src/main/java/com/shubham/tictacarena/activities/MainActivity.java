@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startGame(boolean isAI) {
-        Intent intent = new Intent(this, GameActivity.class);
+        Intent intent = new Intent(this, PatternsActivity.class);
         intent.putExtra("isAI", isAI);
         startActivity(intent);
     }

@@ -6,8 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.button.MaterialButton;
 import com.shubham.tictacarena.R;
 import com.shubham.tictacarena.dialogs.WinnerDialog;
+import com.shubham.tictacarena.models.Pattern;
 import com.shubham.tictacarena.models.PlayerMove;
 import com.shubham.tictacarena.utils.GameLogic;
+import com.shubham.tictacarena.utils.PatternGenerator;
 import com.shubham.tictacarena.views.GameBoardView;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -17,11 +19,14 @@ public class GameActivity extends AppCompatActivity {
 
     private GameBoardView gameBoard;
     private TextView playerTurnText;
+    private TextView patternNameText;
+    private TextView patternRuleText;
     private MaterialButton btnRestart;
     private boolean isAI;
     private boolean isPlayerXTurn = true;
     private Queue<PlayerMove> playerXMoves = new LinkedList<>();
     private Queue<PlayerMove> playerOMoves = new LinkedList<>();
+    private Pattern currentPattern;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +34,8 @@ public class GameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game);
 
         isAI = getIntent().getBooleanExtra("isAI", false);
+        String patternName = getIntent().getStringExtra("pattern");
+        currentPattern = PatternGenerator.getPatternByName(patternName);
 
         initializeViews();
         setupGameBoard();
@@ -38,7 +45,12 @@ public class GameActivity extends AppCompatActivity {
     private void initializeViews() {
         gameBoard = findViewById(R.id.gameBoard);
         playerTurnText = findViewById(R.id.playerTurnText);
+        patternNameText = findViewById(R.id.patternName);
+        patternRuleText = findViewById(R.id.patternRule);
         btnRestart = findViewById(R.id.btnRestart);
+
+        patternNameText.setText(currentPattern.getName());
+        patternRuleText.setText(currentPattern.getRule());
     }
 
     private void setupGameBoard() {
@@ -87,7 +99,12 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void checkWinner() {
-        String winner = GameLogic.checkWinner(gameBoard, playerXMoves, playerOMoves);
+        String winner = GameLogic.checkWinner(
+                gameBoard,
+                playerXMoves,
+                playerOMoves,
+                currentPattern.getWinningLines()
+        );
 
         if (winner != null) {
             showWinnerDialog(winner);
