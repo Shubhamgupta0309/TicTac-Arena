@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">TicTac Arena</string>
+    <string name="tagline">Strategic Pattern-Based Tic-Tac-Toe</string>
+    <string name="play_with_friend">Play with Friend</string>
+    <string name="play_vs_ai">Play vs AI</string>
+    <string name="how_to_play">How to Play</string>
+    <string name="play_again">Play Again</string>
+    <string name="back_to_menu">Back to Menu</string>
 </resources>
